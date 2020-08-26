@@ -3,10 +3,7 @@ package com.hush.algotithm;
 
 import com.sun.xml.internal.ws.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author: huangshuai
@@ -51,28 +48,264 @@ public class Test {
 
         //System.out.println(convert("123456789abcde",3));
 
+        //System.out.println(myAtoi("2147483648"));
 
-        System.out.println(reverse(-12030));
+        //System.out.println(isPalindrome(12321));
 
+        //int[] array = {1,8,6,2,5,4,8,3,7};
+        //System.out.println(maxArea(array));
+
+        //String[] array ={"aa","a"};
+        //System.out.println(longestCommonPrefix(array));
+
+
+        int[] array ={0,1,0,2,1,0,1,3,2,1,2,1};
+        System.out.println(trap(array));
 
     }
 
 
+
+
+
+
+
+
     /**
-     * 字符串转整数 leetcode8
+     * 接雨水 leetcode—42
+     * @param height
+     * @return
+     */
+    public static int trap(int[] height) {
+
+
+        // 1. 动态规划，两个数组分别记录该位置左边的最大值，右边的最大值
+        //    遍历数组求每个位置的雨水，相加求和
+        /*int result = 0;
+        int length = height.length;
+        int[] left_max = new int[length];
+        int[] right_max = new int[length];
+
+        //左边的最高处
+        for (int i = 1; i < length; i++) {
+            left_max[i] = Math.max(left_max[i - 1], height[i - 1]);
+        }
+
+        //右边的最高处
+        for (int j = length - 2; j > 0; j--) {
+            right_max[j] = Math.max(right_max[j + 1], height[j + 1]);
+        }
+
+        for (int i = 0; i < length; i++) {
+            int min = Math.min(left_max[i], right_max[i]);
+            if (min > height[i]) {
+                result += min - height[i];
+            }
+        }*/
+
+
+        // 2. 双指针解法
+        int result = 0;
+        int length = height.length;
+        int left_max = 0;
+        int right_max = 0;
+        for(int i=0,j=length-1;i<j;){
+
+            if (height[i] < height[j]) {
+                if (height[i] > left_max) {
+                    left_max = height[i];
+                } else {
+                    result += left_max - height[i];
+                }
+                i++;
+            } else{
+                if(height[j]>right_max){
+                    right_max = height[j];
+                }else{
+                    result += right_max-height[j];
+                }
+                j--;
+            }
+        }
+
+
+
+
+
+        return result;
+    }
+
+
+
+
+
+    /**
+     * 三数之和 leetcode_15
+     * @param nums
+     * @return
+     */
+    public List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        int length = nums.length;
+        if(nums == null||nums.length<3){
+            return result;
+        }
+        Arrays.sort(nums);
+        for(int i=0;i<length;i++){
+            //第一个数大于0，数组顺序递增，三数之和大于0
+            if(nums[i]>0){
+                break;
+            }
+            // 去重
+            if(i>0 && nums[i] == nums[i-1]){
+                continue;
+            }
+            int L = i + 1;
+            int R = length - 1;
+            while (L < R) {
+                int sum = nums[i]+nums[L]+nums[R];
+                if(sum==0){
+                    result.add(Arrays.asList(nums[i],nums[L],nums[R]));
+                    while (L < R && nums[L]==nums[L+1]){
+                        L++;
+                    }
+                    while (L < R && nums[R]==nums[R-1]){
+                        R--;
+                    }
+                    L++;
+                    R--;
+                }else if(sum<0){
+                    L++;
+                }else if(sum>0){
+                    R--;
+                }
+            }
+        }
+        return result;
+    }
+
+
+
+
+
+    /**
+     * 最长公共前缀 leetcode_14
+     * @param strs
+     * @return
+     */
+    public static String longestCommonPrefix(String[] strs) {
+        if(strs.length <1){
+            return "";
+        }
+        if(strs.length ==1){
+            return strs[0];
+        }
+
+        StringBuilder sb = new StringBuilder("");
+        String temp = strs[0];
+        for (int j = 0; j < temp.length(); j++) {
+            for (int i = 1; i < strs.length; i++) {
+                if (strs[i].length()-1 < j ||  strs[i].charAt(j) != temp.charAt(j)){
+                    return sb.toString();
+                }
+            }
+            sb.append(temp.charAt(j));
+        }
+        return sb.toString();
+    }
+
+
+    /**
+     * 盛水最多的容器 leetcode_11
+     * @param height
+     * @return
+     */
+    public static int maxArea(int[] height) {
+
+        int area =0;
+        for(int i=0,j=height.length-1;i<j;){
+            area = Math.max(area, (j - i) * Math.min(height[i], height[j]));
+            if (height[i] <= height[j]) {
+                i++;
+            } else if (height[i] > height[j]) {
+                j--;
+            }
+        }
+        return area;
+    }
+
+
+
+
+    /**
+     * 回文数 leetcode_9
+     * @param x
+     * @return
+     */
+    public static boolean isPalindrome(int x) {
+        if (x < 0) {
+            return false;
+        }
+        int num = x;
+        int current = 0;
+        while (num != 0) {
+            current = current * 10 + num % 10;
+            num = num / 10;
+        }
+        return current ==x;
+    }
+
+
+
+
+    /**
+     * 字符串转整数 leetcode_8
      *
      * @param str
      * @return
      */
-    public int myAtoi(String str) {
+    public static int myAtoi(String str) {
+        if (str == null || str.trim().isEmpty()) {
+            return 0;
+        }
+        long result = 0;
+        int flag = 1, index = 0;
+        int length = str.length();
+        while (index < length && str.charAt(index) == ' ') {
+            index++;
+        }
 
-        return 0;
+        if (index == length) {
+            return 0;
+        }
+
+        if (str.charAt(index) == '-' || str.charAt(index) == '+') {
+            flag = str.charAt(index) == '+' ? 1 : -1;
+            index++;
+        }
+
+
+        while (index < length) {
+            int digit = str.charAt(index) - '0';
+            if (digit < 0 || digit > 9) {
+                break;
+            }
+            // 判断越界 result * 10 + digit > Integer.MAX_VALUE
+            if (result > (Integer.MAX_VALUE - digit)/10) {
+                return flag == 1 ? Integer.MAX_VALUE : Integer.MIN_VALUE;
+            }
+
+            result = result * 10 + digit;
+            index++;
+        }
+
+        return (int) result * flag;
     }
 
 
 
     /**
-     * 整数反转 leetcode7
+     * 整数反转 leetcode_7
      *
      * @param x
      * @return
@@ -99,7 +332,7 @@ public class Test {
 
 
     /**
-     * Z字形变换 leetcode 6
+     * Z字形变换 leetcode_6
      *
      * @param s
      * @param numRows
@@ -144,7 +377,7 @@ public class Test {
 
 
     /**
-     * 求最长回文子串 leetcode5
+     * 求最长回文子串 leetcode_5
      * @param s
      * @return
      */
@@ -175,7 +408,7 @@ public class Test {
 
 
     /**
-     * leetcode3 获取中位数
+     * 获取中位数 leetcode_3
      * @param nums1
      * @param nums2
      * @return
@@ -234,7 +467,7 @@ public class Test {
 
 
     /**
-     * Leetcode-3
+     * Leetcode_2
      * @param s
      * @return
      */
