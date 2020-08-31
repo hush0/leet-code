@@ -78,7 +78,6 @@ public class Test {
      */
     public static int trap(int[] height) {
 
-
         // 1. 动态规划，两个数组分别记录该位置左边的最大值，右边的最大值
         //    遍历数组求每个位置的雨水，相加求和
         /*int result = 0;
@@ -127,11 +126,6 @@ public class Test {
                 j--;
             }
         }
-
-
-
-
-
         return result;
     }
 
